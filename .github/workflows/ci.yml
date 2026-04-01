@@ -1,0 +1,16 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main ]
+  # Runs after merge intentionally: keeps Codecov badge up to date with 
+  # the actual state of main and catches conflicts between concurrent PRs.
+  push:
+    branches: [ main ]
+    
+jobs:
+  ci:
+    uses: selfshop-dev/platform/.github/workflows/ci.yml@v1
+    secrets: inherit
+    permissions:
+      contents: read
