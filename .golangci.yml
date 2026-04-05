@@ -7,7 +7,7 @@ run: # https://golangci-lint.run/docs/configuration/file/#run-configuration
 linters: # https://golangci-lint.run/docs/configuration/file/#linters-configuration
   default: none
   enable:
-    # ── Bugs & correctness ────────────────────────────────────────────────────
+    # ── Bugs & correctnes ────────────────────────────────────────────────────
     - govet           # https://golangci-lint.run/docs/linters/configuration/#govet
     - noctx           # https://golangci-lint.run/docs/linters/configuration/#noctx
     - staticcheck     # https://golangci-lint.run/docs/linters/configuration/#staticcheck
