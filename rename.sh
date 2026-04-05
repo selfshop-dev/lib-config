@@ -6,7 +6,7 @@ if [[ $# -ne 1 ]]; then
   exit 1
 fi
 
-OLD="tmpl-seed"
+OLD="lib-config"
 NEW="$1"
 
 if [[ -z "$NEW" ]]; then
