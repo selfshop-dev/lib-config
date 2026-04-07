@@ -93,6 +93,8 @@ func New[T any](envPrefix string, defaults map[string]any) (*T, error) {
 			DecodeHook: mapstructure.ComposeDecodeHookFunc(
 				mapstructure.StringToTimeDurationHookFunc(),
 				mapstructure.StringToTimeHookFunc(time.RFC3339),
+				mapstructure.StringToBasicTypeHookFunc(),
+				mapstructure.StringToWeakSliceHookFunc(","),
 				stringToCleanSliceHookFunc(","),
 			),
 		},
