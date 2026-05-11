@@ -1,14 +1,13 @@
 # Security Policy
 
-**Не создавай публичный issue или discussion** — это раскрывает уязвимость до того, как она будет исправлена. **Сообщи о уязвимости приватно** через GitHub: [`🔒 Private Vulnerability Reporting`](../../security/advisories/new).
+**Do not create a public issue or discussion** — this exposes the vulnerability before it is fixed.
+**Report the vulnerability privately** via GitHub: [`🔒 Private Vulnerability Reporting`](../../security/advisories/new).
 
-В сообщении обязательно укажи:
+Please include in your report:
+- Description of the vulnerability and potential impact
+- Steps to reproduce
+- Version / commit / tag where it was found
 
-- Описание уязвимости и потенциальный impact
-- Шаги для воспроизведения
-- Версию / коммит / тег, где обнаружена
-
-**Сроки ответа:**
-
-- Подтверждение получения — в течение **48 часов**
-- Исправление — в течение **14 дней** (критические CVE — значительно быстрее)
+**Response times:**
+- Acknowledgement — within **48 hours**
+- Fix — within **14 days** (critical CVEs — significantly faster)

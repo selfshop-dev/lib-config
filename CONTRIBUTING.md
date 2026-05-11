@@ -1,40 +1,27 @@
 # Contributing
 
-Проект следует [`Conventional Commits`](https://www.conventionalcommits.org). Формат: `<type>: <summary>`, где `summary` — повелительное наклонение,английский язык, без точки в конце.
+This project follows [`Conventional Commits`](https://www.conventionalcommits.org). Format: `<type>: <summary>`, where `summary` is imperative mood, in English, with no trailing period.
 
-| Тип | Когда использовать |
+| Type | When to use |
 |---|---|
-| `feat` | Новая функциональность |
-| `fix` | Исправление бага |
-| `refactor` | Рефакторинг без изменения поведения |
-| `perf` | Оптимизация производительности |
-| `test` | Добавление или изменение тестов |
-| `docs` | Документация |
-| `ci` | Изменения CI/CD и GitHub Actions |
-| `build` | Сборка, зависимости, инфраструктура проекта |
-| `chore` | Рутинные задачи, не попадающие в другие типы |
+| `feat` | New functionality |
+| `fix` | Bug fix |
+| `refactor` | Refactoring without behavior change |
+| `perf` | Performance optimization |
+| `test` | Adding or updating tests |
+| `docs` | Documentation |
+| `ci` | CI/CD and GitHub Actions changes |
+| `build` | Build system, dependencies, project infrastructure |
+| `chore` | Routine tasks that don't fit other types |
 
-Тип коммита автоматически определяет метку PR и тип следующего релиза:  
-
+The commit type automatically determines the PR label and the next release type:
 - `feat!` / `fix!` (breaking change) → major
 - `feat` → minor
 - `fix` / `perf` / `refactor` → patch
 
-### Makefile
+## Code Requirements
+Described in detail in the [`PULL_REQUEST_TEMPLATE`](https://github.com/selfshop-dev/.github/blob/main/PULL_REQUEST_TEMPLATE.md?plain=1) (Checklist section).
 
-| Цель | Описание |
-|---|---|
-| `make code-gen` | Запустить `go generate ./...` |
-| `make lint` | Запустить golangci-lint |
-| `make test` | Генерация кода + тесты с coverage |
-| `make prof` | Собрать профили (cpu, mem, block, mutex) |
-| `make prof-view` | Открыть профиль в браузере (`FILE=cpu.out` по умолчанию) |
-
-## Требования к коду
-
-Подробно описаны в [`PULL_REQUEST_TEMPLATE`](https://github.com/selfshop-dev/.github/blob/main/PULL_REQUEST_TEMPLATE.md?plain=1) (раздел Checklist).
-
-## Issues и уязвимости
-
-- Общие вопросы и баги — через [`шаблоны issues`](../../issues/new/choose).
-- **Уязвимости** — **только** через [`🔒 Private Vulnerability Reporting`](../../security/advisories/new). Не создавай публичный issue или discussion!
+## Issues and Vulnerabilities
+- General questions and bugs — via [`issue templates`](../../issues/new/choose).
+- **Vulnerabilities** — **only** via [`🔒 Private Vulnerability Reporting`](../../security/advisories/new). Do not create a public issue or discussion!

@@ -6,7 +6,7 @@
 [![Go version](https://img.shields.io/github/go-mod/go-version/selfshop-dev/lib-config)](go.mod)
 [![License](https://img.shields.io/github/license/selfshop-dev/lib-config)](LICENSE)
 
-Строгий типобезопасный загрузчик конфигурации из переменных окружения для Go-сервисов. Проект организации [selfshop-dev](https://github.com/selfshop-dev).
+Strict, type-safe configuration loader from environment variables for Go services. A project by [selfshop-dev](https://github.com/selfshop-dev).
 
 ### Installation
 
@@ -16,7 +16,7 @@ go get -u github.com/selfshop-dev/lib-config
 
 ## Overview
 
-`lib-config` загружает конфигурацию из двух источников — хардкодных дефолтов и переменных окружения — и проверяет её за один вызов `New[T]`. Все ошибки выдаются сразу через `errors.Join`, а не по одной. Пакет намеренно ограничен: нет файловых источников, нет слабой типизации, нет молчаливого приёма некорректных значений.
+`lib-config` loads configuration from two sources — hardcoded defaults and environment variables — and validates it in a single `New[T]` call. All errors are reported at once via `errors.Join`, not one at a time. The package is intentionally narrow: no file sources, no weak typing, no silent acceptance of invalid values.
 
 ```go
 type AppConfig struct {
@@ -33,7 +33,7 @@ if err != nil {
 }
 ```
 
-### Быстрый старт
+### Quick Start
 
 ```go
 import config "github.com/selfshop-dev/lib-config"
@@ -49,9 +49,9 @@ cfg, err := config.New[Config]("SVC", map[string]any{
 })
 ```
 
-## Переменные окружения
+## Environment Variables
 
-Двойное подчёркивание (`__`) используется как разделитель вложенности, потому что одиночное подчёркивание слишком часто встречается внутри имён сегментов. Префикс нормализуется автоматически: `"APP"` и `"APP_"` эквивалентны.
+Double underscore (`__`) is used as the nesting separator because a single underscore appears too frequently within segment names. The prefix is normalized automatically: `"APP"` and `"APP_"` are equivalent.
 
 ```bash
 APP_HOST=localhost         # → host
@@ -59,36 +59,36 @@ APP_DB__HOST=localhost     # → db.host
 APP_ENTRY__HTTP__PORT=8080 # → entry.http.port
 ```
 
-Переменная `APP_DB__HOST` читается как: убрать префикс `APP_`, перевести в нижний регистр, заменить `__` на `.`.
+`APP_DB__HOST` is read as: strip the `APP_` prefix, lowercase, replace `__` with `.`.
 
-## Struct tag contract
+## Struct Tag Contract
 
-Каждое экспортируемое поле обязано иметь явный тег `koanf`. Отсутствие тега — ошибка, обнаруживаемая до любого I/O.
+Every exported field must have an explicit `koanf` tag. A missing tag is an error detected before any I/O.
 
 ```go
 type Config struct {
-    Name    string `koanf:"name"`    // скалярное поле
-    Sub     Inner  `koanf:"sub"`     // вложенная структура
-    Base           `koanf:",squash"` // flatten в родительское пространство имён
-    Ignored string `koanf:"-"`       // исключено из загрузки
+    Name    string `koanf:"name"`    // scalar field
+    Sub     Inner  `koanf:"sub"`     // nested struct
+    Base           `koanf:",squash"` // flattened into the parent namespace
+    Ignored string `koanf:"-"`       // excluded from loading
 }
 ```
 
-Поддерживается только опция `squash`. Остальные опции игнорируются.
+Only the `squash` option is supported. All other options are ignored.
 
-## Фазы валидации
+## Validation Phases
 
-`New[T]` прогоняет пять фаз последовательно. Каждая фаза ловит свой класс ошибок, и все нарушения в пределах одной фазы выдаются вместе через `errors.Join`.
+`New[T]` runs five phases in sequence. Each phase catches its own class of errors, and all violations within a phase are reported together via `errors.Join`.
 
-Первая фаза — **struct contract**: все экспортируемые поля должны иметь тег `koanf`. Обнаруживается до любого I/O через рефлексию.
+**Phase 1 — struct contract**: all exported fields must have a `koanf` tag. Detected before any I/O via reflection.
 
-Вторая фаза — **unknown keys**: все нераспознанные ключи репортируются сразу. Ловит опечатки в именах переменных окружения.
+**Phase 2 — unknown keys**: all unrecognized keys are reported at once. Catches typos in environment variable names.
 
-Третья фаза — **decode**: несоответствия типов (например, `"abc"` в `uint16`) репортируются через mapstructure.
+**Phase 3 — decode**: type mismatches (e.g. `"abc"` into `uint16`) are reported via mapstructure.
 
-Четвёртая фаза — **struct tags**: field-level ограничения через go-playground/validator. Ошибки форматируются как `"config: Field: must satisfy rule=param (got value)"`.
+**Phase 4 — struct tags**: field-level constraints via go-playground/validator. Errors are formatted as `"config: Field: must satisfy rule=param (got value)"`.
 
-Пятая фаза — **semantic**: кросс-полевые ограничения через опциональный метод `Validate() error` на `*T`. Используй `errors.Join` внутри `Validate()`, чтобы репортировать все нарушения сразу.
+**Phase 5 — semantic**: cross-field constraints via an optional `Validate() error` method on `*T`. Use `errors.Join` inside `Validate()` to report all violations at once.
 
 ```go
 func (c *Config) Validate() error {
@@ -100,7 +100,7 @@ func (c *Config) Validate() error {
 
 ## Base
 
-`Base` содержит конфигурационные поля, общие для всех сервисов. Встраивай с `koanf:",squash"`, чтобы поля оказались на корневом уровне.
+`Base` contains configuration fields common to all services. Embed with `koanf:",squash"` to place the fields at the root level.
 
 ```go
 type AppConfig struct {
@@ -109,28 +109,28 @@ type AppConfig struct {
 }
 ```
 
-`Base` включает `App` (имя и runmode), `Log` (формат и уровень), `Entry.HTTP` (порт и таймауты) и флаг `Debug`.
+`Base` includes `App` (name and runmode), `Log` (format and level), `Entry.HTTP` (port and timeouts), and a `Debug` flag.
 
 ```go
 cfg.IsProd()    // runmode == "prod"
 cfg.IsDev()     // runmode == "dev"
-cfg.LogFormat() // разрешает "auto" в "json" или "console" по runmode
+cfg.LogFormat() // resolves "auto" to "json" or "console" based on runmode
 ```
 
-`Base.Validate()` автоматически вызывается через пятую фазу и запрещает `debug=true` в prod, а также требует `log.min_level=debug` при включённом debug-режиме.
+`Base.Validate()` is invoked automatically via phase 5 and disallows `debug=true` in prod, and requires `log.min_level=debug` when debug mode is enabled.
 
-### HTTP-таймауты
+### HTTP Timeouts
 
-Порядок таймаутов зафиксирован в validator-тегах: `ReadTimeout < RequestTimeout < WriteTimeout` и `ReadTimeout < RequestTimeout < IdleTimeout`.
+Timeout ordering is enforced via validator tags: `ReadTimeout < RequestTimeout < WriteTimeout` and `ReadTimeout < RequestTimeout < IdleTimeout`.
 
-| Поле | Диапазон | Описание |
+| Field | Range | Description |
 |---|---|---|
-| `port` | 1024–65535 | TCP-порт сервера |
-| `read_timeout` | 5s–60s | Максимальное время чтения запроса |
-| `request_timeout` | 10s–120s | Дедлайн контекста обработчика |
-| `write_timeout` | 5s–90s | Максимальное время записи ответа |
-| `idle_timeout` | 30s–180s | Время жизни idle keep-alive соединения |
+| `port` | 1024–65535 | Server TCP port |
+| `read_timeout` | 5s–60s | Maximum time to read the request |
+| `request_timeout` | 10s–120s | Handler context deadline |
+| `write_timeout` | 5s–90s | Maximum time to write the response |
+| `idle_timeout` | 30s–180s | Keep-alive idle connection lifetime |
 
-## Лицензия
+## License
 
 [`MIT`](LICENSE) © 2026-present [`selfshop-dev`](https://github.com/selfshop-dev)
